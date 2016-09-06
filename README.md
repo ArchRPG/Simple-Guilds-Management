@@ -21,5 +21,11 @@ A simple plugin called Guilds based on FactionsPro also add new feature for Pock
 # Others:
 I hope this plugin can help and add a new implement to your server.
 
+# New Update:
+
+- [x] Add Plots (by request)
+- [x] Some Fix
+- [x] now commands : /g and /guilds
+- [x] Much More!!
 
 
