@@ -30,10 +30,15 @@ class FactionCommands {
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if ($sender instanceof Player) {
+			$player = $sender->getPlayer()->getName();
+			$create = $this->plugin->prefs->get("CreateCost");
+			$claim = $this->plugin->prefs->get("ClaimCost");
+			$oclaim = $this->plugin->prefs->get("OverClaimCost");
+			$allyr = $this->plugin->prefs->get("AllyCost");
+			$allya = $this->plugin->prefs->get("AllyPrice");
+			$home = $this->plugin->prefs->get("SetHomeCost");
             $player = $sender->getPlayer()->getName();
-	$create = $this->plugin->prefs->get("CreateCost");
-	$allyr = $this->plugin->prefs->get("AllyCost");
-            if (strtolower($command->getName('guilds'))) {
+            if (strtolower($command->getName('guilds') or $command->getName('g'))) {
                 if (empty($args)) {
                     $sender->sendMessage($this->plugin->formatMessage("Please use /guilds help for a list of commands"));
                     return true;
@@ -142,7 +147,7 @@ class FactionCommands {
                             return true;
                         }
                         if (strlen($args[1]) > $this->plugin->prefs->get("MaxFactionNameLength")) {
-                            $sender->sendMessage($this->plugin->formatMessage("That name is too long, please try again"));
+                            $sender->sendMessage($this->plugin->formatMessage("That name is too long, please try again the maximum lenght is ". $this->plugin->prefs->get("MaxFactionNameLength")));
                             return true;
                         }
                         if ($this->plugin->isInFaction($sender->getName())) {
@@ -150,6 +155,7 @@ class FactionCommands {
                             return true;
                         } elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $create)) {
                             $factionName = $args[1];
+							$player = strtolower($player);
                             $rank = "Leader";
                             $stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO master (player, faction, rank) VALUES (:player, :faction, :rank);");
                             $stmt->bindValue(":player", $player);
@@ -159,21 +165,25 @@ class FactionCommands {
                             $this->plugin->updateAllies($factionName);
                             $this->plugin->setFactionPower($factionName, $this->plugin->prefs->get("TheDefaultPowerEveryFactionStartsWith"));
                             $this->plugin->updateTag($sender->getName());
-                            $sender->sendMessage($this->plugin->formatMessage("Guilds created", true));
+                            $sender->sendMessage($this->plugin->formatMessage("Guilds succesfull created ! use '/guilds desc' now.", true));
+							$sender->sendMessage($this->plugin->formatMessage("Guilds successfully created for §6$$create", true));
                             return true;
-                        }else{
-                        switch($r){
-			case EconomyAPI::RET_INVALID:
-			$sender->sendMessage($this->plugin->formatMessage("§bYou do not have enough coins to create a Guilds! Need §6$$create."));
-			break;
-			case EconomyAPI::RET_CANCELLED:
-			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
-			break;
-			case EconomyAPI::RET_NO_ACCOUNT:
-			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
-			break;
+                        } else {
+						
+						switch($r){
+							case EconomyAPI::RET_INVALID:
+							
+								$sender->sendMessage($this->plugin->formatMessage("Error! Can't Create Guilds , You Must Have $create Coins To Create A Guilds."));
+								break;
+							case EconomyAPI::RET_CANCELLED:
+						
+								$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+								break;
+							case EconomyAPI::RET_NO_ACCOUNT:
+								$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+								break;
 						}
-                    }
+					  }
                     }
 
                     /////////////////////////////// INVITE ///////////////////////////////
@@ -442,33 +452,325 @@ class FactionCommands {
 /*Help Commands*/
                     if (strtolower($args[0]) == "help") {
                         if (!isset($args[1]) || $args[1] == 1) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b««\n§l§b»§r     §dGuilds Help Page §f[§c1§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/guilds accept §l§b»§r §aAccept A Guilds Request!\n§l§c»§r §e/guilds create <name> §l§b»§r §aCreate Your Desire Guilds! §dYou Need §a$create Coins §dTo Make A Guilds!\n§l§c»§r §e/guilds del §l§b»§r §aDelete Your Own Guilds!\n§l§c»§r §e/guilds demote <player> §l§b»§r §aDemote Your Any Assistance To Members!\n§l§c»§r §e/guilds deny §l§b»§r §aDeny A Guilds Request!");
-                       return true;
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c1§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/guilds accept §l§b»§r §aAccept A Guilds Request!\n§l§c»§r §e/guilds create <name> §l§b»§r §aCreate Your Desire Guilds!\n§l§c»§r §e/guilds del §l§b»§r §aDelete Your Own Guilds!\n§l§c»§r §e/guilds demote <player> §l§b»§r §aDemote Your Any Assistance To Members!\n§l§c»§r §e/guilds deny §l§b»§r §aDeny A Guilds Request!");
+                            return true;
                         }
                         if ($args[1] == 2) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New LEeader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New LEeader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
                             return true;
                         }
                         if ($args[1] == 3) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!\n§l§c»§r §e/guilds claim\n§l§c»§r §e/guilds unclaim\n§l§c»§r §e/guilds pos\n§l§c»§r §e/guilds overclaim");
                             return true;
                         }
                         if ($args[1] == 4) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c4§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds desc §l§b»§r §aUpdate The Guilds Description!\n§l§c»§r §e/guilds promote <player> §l§b»§r §aPromote A Members To Assistants!\n§l§c»§r §e/guilds allywith <guilds> §l§b»§r §aRequest An Alliance With A Guilds! §dYou Need §a$allyr Coins §dTo Alliance With A Guilds!\n§l§c»§r §e/guilds breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/guilds allyok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/guilds allyno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/guilds allies <guilds> §l§b»§r §aShows A Specific Guilds Alliance!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c4§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds desc §l§b»§r §aUpdate The Guilds Description!\n§l§c»§r §e/guilds promote <player> §l§b»§r §aPromote A Members To Assistants!\n§l§c»§r §e/guilds allywith <guilds> §l§b»§r §aRequest An Alliance With A Guilds!\n§l§c»§r §e/guilds breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/guilds allyok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/guilds allyno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/guilds allies <guilds> §l§b»§r §aShows A Specific Guilds Alliance!");
                             return true;
                         }
                         if ($args[1] == 5) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c5§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds membersof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/guilds assistantsof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Assistants!\n§l§c»§r §e/guilds leadersof <guilds> §l§b»§r §aShows The Guilds Leaders List!\n§l§c»§r §e/guilds search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/guilds leaderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/guilds setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/guilds efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/guilds getef §l§b»§r §aGets The Effects You Have Setted!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c5§f/§f§c5§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds membersof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/guilds assistantsof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Assistants!\n§l§c»§r §e/guilds leadersof <guilds> §l§b»§r §aShows The Guilds Leaders List!\n§l§c»§r §e/guilds search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/guilds leaderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/guilds setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/guilds efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/guilds getef §l§b»§r §aGets The Effects You Have Setted!\n§l§c»§r §e/guilds sethome\n§l§c»§r §e/guilds unsethome\n§l§c»§r §e/guilds home");
                             return true;
 
+                        }
+                        if ($args[1] == 6){
+                            $sender->isOP();
+                            $sender->sendMessage(Textformat::GOLD. "Special OP Commands\n/guilds forcedelete <guilds>\n/guilds addgp\n/guilds forceunclaim <guilds>");
+                            return true;
+                        }else{
+                            $sender->sendMessage("ERR :P");
+                            return true;
                         }
                     }
                 }
                 if (count($args == 1)) {
 
+
+
+					/////////////////////////////// CLAIM ///////////////////////////////
+					
+					if(strtolower($args[0]) == 'claim') {
+						if(!$this->plugin->isInFaction($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to claim"));
+							return true;
+						}
+                        if($this->plugin->prefs->get("OfficersCanClaim")){
+                            if(!$this->plugin->isLeader($player) || !$this->plugin->isOfficer($player)) {
+							    $sender->sendMessage($this->plugin->formatMessage("§cOnly Leaders and Officers can claim"));
+							    return true;
+						    }
+                        } else {
+                            if(!$this->plugin->isLeader($player)) {
+							    $sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
+							    return true;
+						    }
+                        }
+						if(!$this->plugin->isLeader($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
+							return true;
+						}
+                        
+						if($this->plugin->inOwnPlot($sender)) {
+							$sender->sendMessage($this->plugin->formatMessage("§aYour guilds has already claimed this area."));
+							return true;
+						}
+						$faction = $this->plugin->getPlayerFaction($sender->getPlayer()->getName());
+                        if($this->plugin->getNumberOfPlayers($faction) < $this->plugin->prefs->get("PlayersNeededInFactionToClaimAPlot")){
+                           
+                           $needed_players =  $this->plugin->prefs->get("PlayersNeededInFactionToClaimAPlot") - 
+                                               $this->plugin->getNumberOfPlayers($faction);
+                           $sender->sendMessage($this->plugin->formatMessage("§bYou need §e$needed_players §bmore players to claim"));
+				           return true;
+                        }
+                        if($this->plugin->getFactionPower($faction) < $this->plugin->prefs->get("PowerNeededToClaimAPlot")){
+                            $needed_power = $this->plugin->prefs->get("PowerNeededToClaimAPlot");
+                            $faction_power = $this->plugin->getFactionPower($faction);
+							$sender->sendMessage($this->plugin->formatMessage("§3Your guilds doesn't have enough power to claim"));
+							$sender->sendMessage($this->plugin->formatMessage("§e"."$needed_power" . " §3power is required. Your guilds only has §a$faction_power §3power."));
+                            return true;
+                        }
+						elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $claim)){
+						$x = floor($sender->getX());
+						$y = floor($sender->getY());
+						$z = floor($sender->getZ());
+						if($this->plugin->drawPlot($sender, $faction, $x, $y, $z, $sender->getPlayer()->getLevel(), $this->plugin->prefs->get("PlotSize")) == false) {
+                            
+							return true;
+						}
+                        
+						$sender->sendMessage($this->plugin->formatMessage("§bGetting your coordinates...", true));
+                        $plot_size = $this->plugin->prefs->get("PlotSize");
+                        $faction_power = $this->plugin->getFactionPower($faction);
+						$sender->sendMessage($this->plugin->formatMessage("§aLand successfully claimed for §6$$claim§a.", true));
+					}
+					else {
+						// $r is an error code
+						switch($r){
+							case EconomyAPI::RET_INVALID:
+								# Invalid $amount
+								$sender->sendMessage($this->plugin->formatMessage("§3You do not have enough Money to Claim! Need §6$$claim"));
+								break;
+							case EconomyAPI::RET_CANCELLED:
+								# Transaction was cancelled for some reason :/
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+							case EconomyAPI::RET_NO_ACCOUNT:
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+						}
+					}
+					}
+                    //position
+                    if(strtolower($args[0]) == 'pos'){
+                        $x = floor($sender->getX());
+						$y = floor($sender->getY());
+						$z = floor($sender->getZ());
+                        $fac = $this->plugin->factionFromPoint($x,$z);
+                        $power = $this->plugin->getFactionPower($fac);
+                        if(!$this->plugin->isInPlot($sender)){
+                            $sender->sendMessage($this->plugin->formatMessage("§bThis area is unclaimed. Use §e/guilds claim §bto claim", true));
+							return true;
+                        }
+                        $sender->sendMessage($this->plugin->formatMessage("§3This plot is claimed by §a$fac §3with §e$power §3power"));
+                    }
+                    
+                    if(strtolower($args[0]) == 'overclaim') {
+						if(!$this->plugin->isInFaction($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to use this"));
+							return true;
+						}
+						if(!$this->plugin->isLeader($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
+							return true;
+						}
+                        $faction = $this->plugin->getPlayerFaction($player);
+						if($this->plugin->getNumberOfPlayers($faction) < $this->plugin->prefs->get("PlayersNeededInFactionToClaimAPlot")){
+                           
+                           $needed_players =  $this->plugin->prefs->get("PlayersNeededInFactionToClaimAPlot") - 
+                                               $this->plugin->getNumberOfPlayers($faction);
+                           $sender->sendMessage($this->plugin->formatMessage("§3You need §e$needed_players §3more players to overclaim"));
+				           return true;
+                        }
+                        if($this->plugin->getFactionPower($faction) < $this->plugin->prefs->get("PowerNeededToClaimAPlot")){
+                            $needed_power = $this->plugin->prefs->get("PowerNeededToClaimAPlot");
+                            $faction_power = $this->plugin->getFactionPower($faction);
+							$sender->sendMessage($this->plugin->formatMessage("§3Your guilds does not have enough power to claim! Get power by killing players!"));
+							$sender->sendMessage($this->plugin->formatMessage("§e$needed_power" . "§3 power is required but your guilds only has §e$faction_power §3power"));
+                            return true;
+                        }
+						$sender->sendMessage($this->plugin->formatMessage("§bGetting your coordinates...", true));
+						$x = floor($sender->getX());
+						$y = floor($sender->getY());
+						$z = floor($sender->getZ());
+                        if($this->plugin->prefs->get("EnableOverClaim")){
+                            if($this->plugin->isInPlot($sender)){
+                                $faction_victim = $this->plugin->factionFromPoint($x,$z);
+                                $faction_victim_power = $this->plugin->getFactionPower($faction_victim);
+                                $faction_ours = $this->plugin->getPlayerFaction($player);
+                                $faction_ours_power = $this->plugin->getFactionPower($faction_ours);
+                                if($this->plugin->inOwnPlot($sender)){
+                                    $sender->sendMessage($this->plugin->formatMessage("§aYour guilds has already claimed this land"));
+                                    return true;
+                                } else {
+                                    if($faction_ours_power < $faction_victim_power){
+                                        $sender->sendMessage($this->plugin->formatMessage("§3Your power level is too low to over claim §b$faction_victim"));
+                                        return true;
+                                    } elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $oclaim))
+									   {
+                                        $this->plugin->db->query("DELETE FROM plots WHERE faction='$faction_ours';");
+                                        $this->plugin->db->query("DELETE FROM plots WHERE faction='$faction_victim';");
+                                        $arm = (($this->plugin->prefs->get("PlotSize")) - 1) / 2;
+                                        $this->plugin->newPlot($faction_ours,$x+$arm,$z+$arm,$x-$arm,$z-$arm);
+					$sender->sendMessage($this->plugin->formatMessage("§aYour guilds has successfully overclaimed the land of §b$faction_victim §afor §6$$oclaim", true));
+                                        return true;
+                                    }
+									else {
+						// $r is an error code
+						    switch($r){
+							case EconomyAPI::RET_INVALID:
+								# Invalid $amount
+								$sender->sendMessage($this->plugin->formatMessage("§3You do not have enough Money to Overclaim! Need §6$oclaim"));
+								break;
+							case EconomyAPI::RET_CANCELLED:
+								# Transaction was cancelled for some reason :/
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+							case EconomyAPI::RET_NO_ACCOUNT:
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+						}
+					}
+                                    
+                                }
+                            } else {
+                                $sender->sendMessage($this->plugin->formatMessage("§cYou are not in claimed land"));
+                                return true;
+                            }
+                        } else {
+                            $sender->sendMessage($this->plugin->formatMessage("§cInsufficient permissions"));
+                            return true;
+                        }
+                        
+					}
+                    
+					
+					/////////////////////////////// UNCLAIM ///////////////////////////////
+					
+					if(strtolower($args[0]) == "unclaim") {
+                        if(!$this->plugin->isInFaction($sender->getName())) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to use this"));
+							return true;
+						}
+						if(!$this->plugin->isLeader($sender->getName())) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
+							return true;
+						}
+						$faction = $this->plugin->getPlayerFaction($sender->getName());
+						$this->plugin->db->query("DELETE FROM plots WHERE faction='$faction';");
+						$sender->sendMessage($this->plugin->formatMessage("§aLand successfully unclaimed", true));
+					}
+					/////////////////////////////// SETHOME ///////////////////////////////
+					
+					if(strtolower($args[0] == "sethome")) {
+						if(!$this->plugin->isInFaction($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to do this"));
+							return true;
+						}
+						if(!$this->plugin->isLeader($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to set home"));
+							return true;
+						}
+                        
+                        $faction_power = $this->plugin->getFactionPower($this->plugin->getPlayerFaction($player));
+                        $needed_power = $this->plugin->prefs->get("PowerNeededToSetOrUpdateAHome");
+                        if($faction_power < $needed_power){
+                            $sender->sendMessage($this->plugin->formatMessage("§3Your guilds doesn't have enough power set a home. Get power by killing players!"));
+                            $sender->sendMessage($this->plugin->formatMessage("§e $needed_power §3power is required to set a home. Your guilds has §e$faction_power §3power."));
+							return true;
+                        }
+						elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $home)){
+						$factionName = $this->plugin->getPlayerFaction($sender->getName());
+						$stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO home (faction, x, y, z) VALUES (:faction, :x, :y, :z);");
+						$stmt->bindValue(":faction", $factionName);
+						$stmt->bindValue(":x", $sender->getX());
+						$stmt->bindValue(":y", $sender->getY());
+						$stmt->bindValue(":z", $sender->getZ());
+						$result = $stmt->execute();
+						$sender->sendMessage($this->plugin->formatMessage("Guilds home set for $home Coins", true));
+                        }
+						else {
+
+						    switch($r){
+							case EconomyAPI::RET_INVALID:
+
+								$sender->sendMessage($this->plugin->formatMessage("Error! You Need $home Coins To Set A Home!"));
+								break;
+							case EconomyAPI::RET_CANCELLED:
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+							case EconomyAPI::RET_NO_ACCOUNT:
+								$sender->sendMessage($this->plugin->formatMessage("Error!"));
+								break;
+						}
+					}
+					}
+					
+					/////////////////////////////// UNSETHOME ///////////////////////////////
+						
+					if(strtolower($args[0] == "unsethome")) {
+						if(!$this->plugin->isInFaction($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to do this"));
+							return true;
+						}
+						if(!$this->plugin->isLeader($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to unset home"));
+							return true;
+						}
+						$faction = $this->plugin->getPlayerFaction($sender->getName());
+						$this->plugin->db->query("DELETE FROM home WHERE faction = '$faction';");
+						$sender->sendMessage($this->plugin->formatMessage("§aHome unset succeed", true));
+					}
+					
+					/////////////////////////////// HOME ///////////////////////////////
+						
+					if(strtolower($args[0] == "home")) {
+						if(!$this->plugin->isInFaction($player)) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to do this."));
+                            return true;
+						}
+						$faction = $this->plugin->getPlayerFaction($sender->getName());
+						$result = $this->plugin->db->query("SELECT * FROM home WHERE faction = '$faction';");
+						$array = $result->fetchArray(SQLITE3_ASSOC);
+						if(!empty($array)) {
+							$sender->getPlayer()->teleport(new Vector3($array['x'], $array['y'], $array['z']));
+							$sender->sendMessage($this->plugin->formatMessage("§bTeleported to home.", true));
+							return true;
+						} else {
+							$sender->sendMessage($this->plugin->formatMessage("Guilds home has not been set"));
+				        }
+				    }
+                    //TOP10 Leaderboards
                     if (strtolower($args[0]) == 'leaderboards') {
                         $this->plugin->sendListOfTop10FactionsTo($sender);
                     }
+                    //force unclaim
+                    if(strtolower($args[0] == "forceunclaim")){
+                        if(!isset($args[1])){
+                            $sender->sendMessage($this->plugin->formatMessage("/guilds forceunclaim <guilds>"));
+                            return true;
+                        }
+                        if(!$this->plugin->factionExists($args[1])) {
+							$sender->sendMessage($this->plugin->formatMessage("§cThe requested guilds does not exist"));
+                            return true;
+						}
+                        if(!($sender->isOp())) {
+							$sender->sendMessage($this->plugin->formatMessage("§cInsufficient permissions"));
+                            return true;
+						}
+				        $sender->sendMessage($this->plugin->formatMessage("§bLand of §a$args[1]§b unclaimed"));
+                        $this->plugin->db->query("DELETE FROM plots WHERE faction='$args[1]';");
+                        
+                    }
+                    //forcedelete
                     if (strtolower($args[0]) == 'forcedelete') {
                         if (!isset($args[1])) {
                             $sender->sendMessage($this->plugin->formatMessage("Usage: /guilds forcedelete <guilds>"));
@@ -491,6 +793,7 @@ class FactionCommands {
                         $this->plugin->db->query("DELETE FROM home WHERE faction='$args[1]';");
                         $sender->sendMessage($this->plugin->formatMessage("Unwanted guilds was successfully deleted and their guilds plot was unclaimed!", true));
                     }
+                    //Add Guilds Points
                     if (strtolower($args[0]) == 'addgp') {
                         if (!isset($args[1]) or ! isset($args[2])) {
                             $sender->sendMessage($this->plugin->formatMessage("Usage: /guilds addgp <guilds> <GuildsPoints>"));
@@ -507,6 +810,7 @@ class FactionCommands {
                         $this->plugin->addFactionPower($args[1], $args[2]);
                         $sender->sendMessage($this->plugin->formatMessage("Successfully added $args[2] GuildsPoints to $args[1]", true));
                     }
+                    //Stalk A player
                     if (strtolower($args[0]) == 'search') {
                         if (!isset($args[1])) {
                             $sender->sendMessage($this->plugin->formatMessage("Usage: /guilds search <player>"));
@@ -668,7 +972,7 @@ class FactionCommands {
                             $sender->sendMessage($this->plugin->formatMessage("The requested guilds doesn't exist"));
                             return true;
                         }
-                        $this->plugin->getPlayersInFactionByRank($sender, $args[1], "O§f[§c3§§f[§c4§§f[§c5ff§c6§f]§c6§f]§c6§f]icer");
+                        $this->plugin->getPlayersInFactionByRank($sender, $args[1], "Officer");
                     }
                     if (strtolower($args[0] == "ourleaders")) {
                         if (!$this->plugin->isInFaction($player)) {
@@ -722,6 +1026,23 @@ class FactionCommands {
                             }
                         }
                     }
+					/////////////////////////////// MSG ///////////////////////////////
+					
+					if(strtolower($args[0]) == "msg") {
+						if($this->plugin->isInFaction($sender->getName()) == false) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to use this"));
+							return true;
+						}
+						if($this->plugin->isLeader($player) == false) {
+							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
+							return true;
+						}
+						$sender->sendMessage($this->plugin->formatMessage("§bType your desired message in chat", true));
+						$stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO motdrcv (player, timestamp) VALUES (:player, :timestamp);");
+						$stmt->bindValue(":player", strtolower($sender->getName()));
+						$stmt->bindValue(":timestamp", time());
+						$result = $stmt->execute();
+					}
 
 
                     ////////////////////////////// ALLY SYSTEM ////////////////////////////////
@@ -754,7 +1075,7 @@ class FactionCommands {
                         $leader = $this->plugin->getServer()->getPlayerExact($this->plugin->getLeader($args[1]));
 
                         if (!($leader instanceof Player)) {
-                            $sender->sendMessage($this->plugin->formatMessage("The leader of the requested guilds is o§f[§c3§§f[§c4§§f[§c5ff§c6§f]§c6§f]§c6§f]line"));
+                            $sender->sendMessage($this->plugin->formatMessage("The leader of the requested guilds is offline"));
                             return true;
                         }
                         $this->plugin->setEnemies($fac, $args[1]);
@@ -802,7 +1123,7 @@ class FactionCommands {
                         if ($this->plugin->getAlliesCount($fac) >= $this->plugin->getAlliesLimit()) {
                             $sender->sendMessage($this->plugin->formatMessage("Your guilds has the maximum amount of allies", false));
                             return true;
-                        }elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $allyr)){
+                        }
                         $stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO alliance (player, faction, requestedby, timestamp) VALUES (:player, :faction, :requestedby, :timestamp);");
                         $stmt->bindValue(":player", $leader->getName());
                         $stmt->bindValue(":faction", $args[1]);
@@ -811,19 +1132,6 @@ class FactionCommands {
                         $result = $stmt->execute();
                         $sender->sendMessage($this->plugin->formatMessage("You requested to ally with $args[1]!\nWait for the leader's response...", true));
                         $leader->sendMessage($this->plugin->formatMessage("The leader of $fac requested an alliance.\nType /guilds allyok to accept or /guilds allyno to deny.", true));
-                    }else{
-		        switch($r){
-			case EconomyAPI::RET_INVALID:
-			$sender->sendMessage($this->plugin->formatMessage("§3You do not have enough coins to send a Ally Request! You Need §6$$allyr"));
-			break;
-			case EconomyAPI::RET_CANCELLED:
-			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
-			break;
-			case EconomyAPI::RET_NO_ACCOUNT:
-			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
-			break;
-						}
-					}
                     }
                     if (strtolower($args[0] == "breakalliancewith")) {
                         if (!isset($args[1])) {
@@ -972,7 +1280,7 @@ class FactionCommands {
                         $strengthperkill = $this->plugin->prefs->get("PowerGainedPerKillingAnEnemy");
                         if($factionstrength < $lvl[0]){
                             $needed_power = $lvl[0];
-							$sender->sendMessage($this->plugin->formatMessage("Your guilds doesn't have enough GuildsPoints to select an e§f[§c3§§f[§c4§§f[§c5ff§c6§f]§c6§f]§c6§f]ect."));
+							$sender->sendMessage($this->plugin->formatMessage("Your guilds doesn't have enough GuildsPoints to select an effect."));
 							$sender->sendMessage($this->plugin->formatMessage("$needed_power GuildsPoints is required but your guilds has only $factionstrength GuildsPoints."));
 							return true;
                         }
@@ -1034,12 +1342,21 @@ class FactionCommands {
                         return true;
                         }
 
+
+
+
+
+
+
                     /////////////////////////////// ABOUT ///////////////////////////////
 
                     if (strtolower($args[0] == 'about')) {
-                        $sender->sendMessage(TextFormat::GREEN . "§l§b»§r\n eThis Server Using A Guilds System.\n eBe The Most Powerfull Guilds In This Server!\n eCreate,Join,Destroy A Guilds!\n eStart Now By Using This Commands! : /guilds help [page]\n§l§b« ");
-                        $sender->sendMessage(TextFormat::GOLD . "\n\naDevelop By GamerXzavier.");
+                        $sender->sendMessage(TextFormat::GREEN . "§l§b»§r\n eThis Server Using A Guilds System.\n §eBe The Most Powerfull Guilds In This Server!\n §eCreate,Join,Destroy A Guilds!\n §eStart Now By Using This Commands! : /guilds help [page]\n§l§b« ");
+                        $sender->sendMessage(TextFormat::GOLD . "\n\n§aDevelop By GamerXzavier.");
                     }
+                    //Thanks To The original authors Tethered_
+                    //Thank To The Supporter
+                    //Big Thanks To NeuroBinds Project Corporation For Helping 64% Of The Code!
                 }
             }
         } else {

@@ -2,7 +2,9 @@
 
 namespace FactionsPro;
 
-//Thanks To NeuroBinds Project Corporation To Help Us With This!
+/*
+ */
+
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
@@ -27,14 +29,14 @@ class FactionMain extends PluginBase implements Listener {
     public $war_req = [];
     public $wars = [];
     public $war_players = [];
-    public $chatcensor;
+    //public $chatcensor;
 
     public function onEnable() {
 
         @mkdir($this->getDataFolder());
 
-        if (!file_exists($this->getDataFolder() . "BannedNames.txt")) {
-            $file = fopen($this->getDataFolder() . "BannedNames.txt", "w");
+        if (!file_exists($this->getDataFolder() . "DisableGuildsName.txt")) {
+            $file = fopen($this->getDataFolder() . "DisableGuildsName.txt", "w");
             $txt = "Admin:admin:Staff:staff:Owner:owner:Builder:builder:Op:OP:op";
             fwrite($file, $txt);
         }
@@ -42,25 +44,35 @@ class FactionMain extends PluginBase implements Listener {
 
         $this->getServer()->getPluginManager()->registerEvents(new FactionListener($this), $this);
 
-        
 
         $this->fCommand = new FactionCommands($this);
 
-        $this->prefs = new Config($this->getDataFolder() . "GuildsSettings.yml", CONFIG::YAML, array(
+        $this->prefs = new Config($this->getDataFolder() . "GuildsOptions.yml", CONFIG::YAML, array(
             "MaxFactionNameLength" => 15,
             "MaxPlayersPerFaction" => 30,
             "OnlyLeadersAndOfficersCanInvite" => true,
+            "###Plots###",
+		    "OfficersCanClaim" => false,
+	    	"PlotSize" => 30,
+            "PlayersNeededInFactionToClaimAPlot" => 5,
+            "###Guilds Power###",
+            "PowerNeededToClaimAPlot" => 1000,
             "PowerNeededToSetOrUpdateAHome" => 250,
             "PowerGainedPerPlayerInFaction" => 50,
             "PowerGainedPerKillingAnEnemy" => 10,
-            "PowerReducedPerDeathByAnEnemy" => 10,
+    		"PowerReducedPerDeathByAnEnemy" => 10,
             "PowerGainedPerAlly" => 100,
             "AllyLimitPerFaction" => 5,
             "TheDefaultPowerEveryFactionStartsWith" => 0,
-	    "CreateCost" => 3000,
-	    "AllyCost" => 5000,
+            "###Economys###",
+            "CreateCost" => 3000,
+		    "ClaimCost" => 100000,
+	    	"OverClaimCost" => 25000,
+	    	"AllyCost" => 5000,
+	    	"AllyPrice" => 5000,
+	    	"SetHomeCost" => 150,
         ));
-        $this->db = new \SQLite3($this->getDataFolder() . "FactionsPro.db");
+        $this->db = new \SQLite3($this->getDataFolder() . "GuildsDatabase.db");
         $this->db->exec("CREATE TABLE IF NOT EXISTS master (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, rank TEXT);");
         $this->db->exec("CREATE TABLE IF NOT EXISTS confirm (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, invitedby TEXT, timestamp INT);");
         $this->db->exec("CREATE TABLE IF NOT EXISTS alliance (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, requestedby TEXT, timestamp INT);");
@@ -312,12 +324,8 @@ class FactionMain extends PluginBase implements Listener {
     }
 
     public function isNameBanned($name) {
-        $bannedNames = file_get_contents($this->getDataFolder() . "BannedNames.txt");
-        $chatcensorbanned = false;
-        if ($this->chatcensor && $this->chatcensor->getProfanityFilter()->hasProfanity($name))
-            $chatcensorbanned = true;
-        
-        return (strpos(strtolower($bannedNames), strtolower($name)) > 0 || $chatcensorbanned);
+        $bannedNAmes = file_get_contents($this->getDataFolder() . "DisableGuildsName.txt");
+        return (strpos(strtolower($bannedNAmes), strtolower($name)));
     }
 
     public function newPlot($faction, $x1, $z1, $x2, $z2) {
