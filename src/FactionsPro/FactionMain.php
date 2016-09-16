@@ -55,6 +55,7 @@ class FactionMain extends PluginBase implements Listener {
 		    "OfficersCanClaim" => false,
 	    	"PlotSize" => 30,
             "PlayersNeededInFactionToClaimAPlot" => 5,
+            "ClaimWorlds" => [],
             "###Guilds Power###",
             "PowerNeededToClaimAPlot" => 1000,
             "PowerNeededToSetOrUpdateAHome" => 250,
@@ -85,6 +86,7 @@ class FactionMain extends PluginBase implements Listener {
         $this->db->exec("CREATE TABLE IF NOT EXISTS enemies(ID INT PRIMARY KEY,faction1 TEXT, faction2 TEXT);");
         $this->db->exec("CREATE TABLE IF NOT EXISTS alliescountlimit(faction TEXT PRIMARY KEY, count INT);");
 		$this->db->exec("CREATE TABLE IF NOT EXISTS effects(faction TEXT PRIMARY KEY, effect TEXT);");
+        $this->db->exec("CREATE TABLE IF NOT EXISTS moneys(faction TEXT PRIMARY KEY, moneys INT);");
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -434,6 +436,32 @@ class FactionMain extends PluginBase implements Listener {
             $p->setNameTag(TextFormat::ITALIC . TextFormat::GOLD . "<$f> " .
                     TextFormat::ITALIC . TextFormat::YELLOW . "<$player>");
         }
+    }
+///TEST::FACTIONMONEY///
+    public function getFactionMoney($faction) {
+        $result = $this->db->query("SELECT * FROM money WHERE faction = '$faction';");
+        $resultArr = $result->fetchArray(SQLITE3_ASSOC);
+        return (int) $resultArr["money"];
+    }
+
+    public function addFactionMoney($faction, $money) {
+        if ($this->getFactionMoney($faction) + $money < 0) {
+            $money = $this->getFactionMoney($faction);
+        }
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, money) VALUES (:faction, :money);");
+        $stmt->bindValue(":faction", $faction);
+        $stmt->bindValue(":money", $this->getFactionMoney($faction) + $money);
+        $result = $stmt->execute();
+    }
+
+    public function subtractFactionMoney($faction, $money) {
+        if ($this->getFactionMoney($faction) - $money < 0) {
+            $money = $this->getFactionMoney($faction);
+        }
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, money) VALUES (:faction, :money);");
+        $stmt->bindValue(":faction", $faction);
+        $stmt->bindValue(":money", $this->getFactionMoney($faction) - $money);
+        $result = $stmt->execute();
     }
 
     public function onDisable() {
