@@ -29,5 +29,8 @@ I hope this plugin can help and add a new implement to your server.
 - [x] Some Fix
 - [x] now commands : /g and /guilds
 - [x] Much More!!
+- [x] WorldClaim (so your hub people can't claim)
+- [x] Test Update: GuildsMoney
+- [x] Clean Up
 
 
