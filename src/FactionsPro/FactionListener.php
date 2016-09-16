@@ -132,6 +132,7 @@ class FactionListener implements Listener {
                 if($this->plugin->isInFaction($p)){
                     $f = $this->plugin->getPlayerFaction($p);
                     $e = $this->plugin->prefs->get("PowerGainedPerKillingAnEnemy");
+  $killer->sendPopup("§6+".$e);
                     if($ent instanceof Player){
                         if($this->plugin->isInFaction($ent->getPlayer()->getName())){
                            $this->plugin->addFactionPower($f,$e);
@@ -146,7 +147,8 @@ class FactionListener implements Listener {
             $e = $ent->getPlayer()->getName();
             if($this->plugin->isInFaction($e)){
                 $f = $this->plugin->getPlayerFaction($e);
-                $e = $this->plugin->prefs->get("PowerGainedPerKillingAnEnemy");
+                $e = $this->plugin->prefs->get("PowerReducedPerDeathByAnEnemy");
+     $e->sendPopup("§c-".$e)
                 if($ent->getLastDamageCause() instanceof EntityDamageByEntityEvent && $ent->getLastDamageCause()->getDamager() instanceof Player){
                     if($this->plugin->isInFaction($ent->getLastDamageCause()->getDamager()->getPlayer()->getName())){      
                         $this->plugin->subtractFactionPower($f,$e*2);
@@ -157,22 +159,6 @@ class FactionListener implements Listener {
             }
         }
     }
-    public function onDeath(PlayerDeathEvent $event) {
-		$victim = $event->getPlayer();
-		$cause = $victim->getLastDamageCause();
-		if($cause instanceof EntityDamageByEntityEvent) {
-			$killer = $cause->getDamager();
-			if($victim instanceof Player) {
-				$q = strtoupper($victim->getPlayer()->getName());
-                if($this->plugin->isInFaction($q)){
-                    $a = $this->plugin->getPlayerFaction($q);
-                    $b = $this->plugin->prefs->get("PowerReducedPerDeathByAnEnemy");
-                    $this->plugin->subtractFactionPower($a,$b);
-                }
-				
-			}
-		} 
-	}
     
 	public function onPlayerJoin(PlayerJoinEvent $event) {
 		$this->plugin->updateTag($event->getPlayer()->getName());
