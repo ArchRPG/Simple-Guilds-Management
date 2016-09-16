@@ -417,6 +417,7 @@ class FactionCommands {
                             $result = $this->plugin->db->query("SELECT * FROM motd WHERE faction='$faction';");
                             $array = $result->fetchArray(SQLITE3_ASSOC);
                             $power = $this->plugin->getFactionPower($faction);
+                            $money = $this->plugin->getFactionMoney($faction);
                             $message = $array["message"];
                             $leader = $this->plugin->getLeader($faction);
                             $numPlayers = $this->plugin->getNumberOfPlayers($faction);
@@ -424,7 +425,8 @@ class FactionCommands {
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuilds §8: " . TextFormat::GREEN . "§d$faction" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aLeader §8: " . TextFormat::YELLOW . "§d$leader" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aPlayers §8: " . TextFormat::LIGHT_PURPLE . "§d$numPlayers" . TextFormat::RESET);
-                            $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsPoints §8: " . TextFormat::RED . "§d$power" . " " . TextFormat::RESET);
+                            $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsPoints §8: " . TextFormat::RED . "§d$power" . " " . TextFormat::RESET);     
+                $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsMoneys §8: " . TextFormat::RED . "§d$money" . " " . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aDescription §8: " . TextFormat::AQUA . TextFormat::UNDERLINE . "§d$message" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§eInformation §l§b«" . TextFormat::RESET);
                         } else {
@@ -436,6 +438,7 @@ class FactionCommands {
                             $result = $this->plugin->db->query("SELECT * FROM motd WHERE faction='$faction';");
                             $array = $result->fetchArray(SQLITE3_ASSOC);
                             $power = $this->plugin->getFactionPower($faction);
+                            $money = $this->plugin->getFactionMoney($faction);
                             $message = $array["message"];
                             $leader = $this->plugin->getLeader($faction);
                             $numPlayers = $this->plugin->getNumberOfPlayers($faction);
@@ -443,7 +446,8 @@ class FactionCommands {
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuilds §8: " . TextFormat::GREEN . "§d$faction" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aLeader §8: " . TextFormat::YELLOW . "§d$leader" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aPlayers §8: " . TextFormat::LIGHT_PURPLE . "§d$numPlayers" . TextFormat::RESET);
-                            $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsPoints §8: " . TextFormat::RED . "§d$power" . " " . TextFormat::RESET);
+                            $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsPoints §8: " . TextFormat::RED . "§d$power" . " " . TextFormat::RESET);     
+                $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aGuildsMoneys §8: " . TextFormat::RED . "§d$money" . " " . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§aDescription §8: " . TextFormat::AQUA . TextFormat::UNDERLINE . "§d$message" . TextFormat::RESET);
                             $sender->sendMessage(TextFormat::GOLD . TextFormat::ITALIC . "§r§l§b» §r§eInformation §l§b«" . TextFormat::RESET);
                     return true;
@@ -488,7 +492,7 @@ class FactionCommands {
 
 					/////////////////////////////// CLAIM ///////////////////////////////
 					
-					if(strtolower($args[0]) == 'claim') {
+					if(strtolower($args[0]) == 'claim') {//
 						if(!$this->plugin->isInFaction($player)) {
 							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to claim"));
 							return true;
@@ -504,10 +508,14 @@ class FactionCommands {
 							    return true;
 						    }
                         }
-						if(!$this->plugin->isLeader($player)) {
-							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
-							return true;
-						}
+                        if (!$this->plugin->isLeader($player)) {
+                            $sender->sendMessage($this->plugin->formatMessage("You must be leader to use this."));
+                            return true;
+                        }
+                        if (!in_array($sender->getPlayer()->getLevel()->getName(), $this->plugin->prefs->get("ClaimWorlds"))) {
+                            $sender->sendMessage($this->plugin->formatMessage("You can only claim in Guilds Worlds: " . implode(" ", $this->plugin->prefs->get("ClaimWorlds"))));
+                            return true;
+                        }
                         
 						if($this->plugin->inOwnPlot($sender)) {
 							$sender->sendMessage($this->plugin->formatMessage("§aYour guilds has already claimed this area."));
