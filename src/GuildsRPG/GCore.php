@@ -51,7 +51,7 @@ class GCore extends PluginBase implements Listener {
         $this->guildsCommand = new GuildsCommands($this);
         $settingsname = "GuildsOptions.yml";
         $this->settings = new Config($this->getDataFolder() . $settingsname, CONFIG::YAML, array(
-            "MaxguildNameLength" => 15,
+            "MaxGuildNameLength" => 15,
             "MaxPlayersPerguild" => 30,
             "OnlyLeadersAndOfficersCanInvite" => true,
             "###Plots###",
