@@ -15,6 +15,7 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\utils\TextFormat as Z;
+use pocketmine\utils\TextFormat;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\utils\Config;
 use pocketmine\event\entity\EntityDamageEvent;
