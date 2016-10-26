@@ -42,15 +42,13 @@ class GuildsCommands {
 	CONST MAP_WIDTH = 48;
 	CONST MAP_HEIGHT = 8;
 	CONST MAP_HEIGHT_FULL = 17;
-	CONST MAP_KEY_CHARS = "\\/#?ç¬£$%=&^ABCDEFGHJKLMNOPQRSTUVWXYZÄÖÜÆØÅ1234567890abcdeghjmnopqrsuvwxyÿzäöüæøåâêîûô";
+	CONST MAP_KEY_CHARS = "||/#?ç¬£$%=&^ABCDEFGHJKLMNOPQRSTUVWXYZÄÖÜÆØÅ1234567890abcdeghjmnopqrsuvwxyÿzäöüæøåâêîûô";// \\
 	CONST MAP_KEY_WILDERNESS = Z::DARK_GRAY . "+";
 	CONST MAP_KEY_SEPARATOR = Z::YELLOW . "+";
 	CONST MAP_KEY_OVERFLOW = Z::WHITE . "#" . Z::WHITE;
 	CONST MAP_OVERFLOW_MESSAGE = self::MAP_KEY_OVERFLOW . ": Too Many Guilds (>" . 107 . ") on this Map.";
 
 /////??MAP??/////
-
-//WAIT TIL 1/1/2017
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if ($sender instanceof Player) {
@@ -554,8 +552,7 @@ class GuildsCommands {
 						$guild = $this->plugin->getPlayerGuild($sender->getPlayer()->getName());
                         if($this->plugin->getNumberOfPlayers($guild) < $this->plugin->settings->get("PlayersNeededInGuildToClaimAPlot")){
                            
-                           $needed_players =  $this->plugin->settings->get("PlayersNeededInGuildToClaimAPlot") - 
-                                               $this->plugin->getNumberOfPlayers($guild);
+                           $needed_players =  $this->plugin->settings->get("PlayersNeededInGuildToClaimAPlot") - $this->plugin->getNumberOfPlayers($guild);
                            $sender->sendMessage("§bYou need §e$needed_players §bmore players to claim");
 				           return true;
                         }
@@ -566,7 +563,7 @@ class GuildsCommands {
 							$sender->sendMessage("§e"."$needed_point" . " §3point is required. Your guilds only has §a$guild_point §3point.");
                             return true;
                         }
-						elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $claim)){
+						else if($r = EconomyAPI::getInstance()->reduceMoney($player, $claim)){
 						$x = floor($sender->getX());
 						$y = floor($sender->getY());
 						$z = floor($sender->getZ());
@@ -578,7 +575,7 @@ class GuildsCommands {
 						$sender->sendMessage("§bGetting your coordinates...", true);
                         $plot_size = $this->plugin->settings->get("PlotSize");
                         $guild_point = $this->plugin->getGuildsPoints($guild);
-						$sender->sendMessage("§aLand successfully claimed for §6$$claim§a.", true);
+						$sender->sendMessage("§aLand successfully claimed for §6$$claim §a.", true);
 					}
 					else {
 						// $r is an error code
