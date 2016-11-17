@@ -135,8 +135,8 @@ class GuildsCommands {
                             $this->plugin->updateNemisys($guildName);
                             $this->plugin->setGuildsPoints($guildName, $this->plugin->settings->get("TheDefaultPointEveryGuildStartsWith"));
                             $this->plugin->updateTag($player);
-                            $sender->sendMessage($this->plugin->formatMessage("Guilds succesfull created ! use '/guilds desc' now.", true));
-							$sender->sendMessage($this->plugin->formatMessage("Guilds successfully created for §6$create" , true));
+                            $sender->sendMessage($this->plugin->formatMessage("Guild succesfull created ! use '/g desc' now.", true));
+							$sender->sendMessage($this->plugin->formatMessage("Guild successfully created for §6$create" , true));
                             return true;
                         } else {
 						
@@ -160,7 +160,7 @@ class GuildsCommands {
                     if (strtolower($args[0]) == 'info') {
                         if (isset($args[1])) {
                             if (!(ctype_alnum($args[1])) | !($this->plugin->guildsExists($args[1]))) {
-                                $sender->sendMessage("Guilds does not exist");
+                                $sender->sendMessage("Guild does not exist");
                                 $sender->sendMessage("Make sure the name of the selected guild is ABSOLUTELY EXACT.");
                                 return true;
                             }
