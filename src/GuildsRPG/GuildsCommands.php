@@ -29,12 +29,12 @@ class GuildsCommands {
         $this->plugin = $pg;
     }
 
-    CONST HELP_MESSAGE_ONE = "§dGuild Help Page §f[§c1§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/g about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/g accept §l§b»§r §aAccept A Guild Request!\n§l§c»§r §e/g create <name> §l§b»§r §aCreate Your Desire Guild!\n§l§c»§r §e/g del §l§b»§r §aDelete Your Own Guild!\n§l§c»§r §e/g demote <player> §l§b»§r §aDemote Your Any SecondInCommands To Members!\n§l§c»§r §e/g deny §l§b»§r §aDeny A Guild Request!";
-    CONST HELP_MESSAGE_TWO = "§dGuild Help Page §f[§c2§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/g help <page> §l§b»§r §aShows A List Of Guild Help Page!\n§l§c»§r §e/g info §l§b»§r §aShows Your Guild Information!\n§l§c»§r §e/g info <guilds> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/g invite <player> §l§b»§r §aInvite A Player Into The Guild!\n§l§c»§r §e/g kick <player> §l§b»§r §aKick/Remove Specific Player From Your Guild!\n§l§c»§r §e/g guildsmasters <player> §l§b»§r §aMake A Player To Be The New guildsmasters!\n§l§c»§r §e/g leave §l§b»§r §aLeave Your Current Guild!";
-    CONST HELP_MESSAGE_THREE = "§dGuild Help Page §f[§c3§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/g m - {Members + Statuses} §l§b»§r §aShows Your Guild MembersList!\n§l§c»§r §e/g sic - {SecondInCommands + Statuses} §l§b»§r §aShows Your SecondInCommandsList!\n§l§c»§r §e/g ourgm - {guildsmasters + Status} §l§b»§r §aShows Your guildmasterList!\n§l§c»§r §e/g alliance §l§b»§r §aShows The Guilds YOU ALLIED!\n§l§c»§r §e/g claim\n§l§c»§r §e/g unclaim\n§l§c»§r §e/g pos\n§l§c»§r §e/g overclaim\n/g say <message>";
-    CONST HELP_MESSAGE_FOUR = "§dGuild Help Page §f[§c4§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/g desc §l§b»§r §aUpdate The Guild Description!\n§l§c»§r §e/g promote <player> §l§b»§r §aPromote A Members To SecondInCommands!\n§l§c»§r §e/g Alliancewith <guilds> §l§b»§r §aRequest An Alliance With A Guilds!\n§l§c»§r §e/g breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/g Allianceok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/g Allianceno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/g alliance <guilds> §l§b»§r §aShows A Specific Guilds Alliance!";
-    CONST HELP_MESSAGE_FIVE = "§dGuild Help Page §f[§c5§f/§f§c5§f]" . Z::RED . "\n§l§c»§r §e/g mof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/g sicof <guilds> §l§b»§r §aShows The List Of A Specific Guilds SecondInCommands!\n§l§c»§r §e/g gmof <guilds> §l§b»§r §aShows The Guilds guildmaster List!\n§l§c»§r §e/g search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/g learderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/g setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/g efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/g getef §l§b»§r §aGets The Effects You Have Setted!\n§l§c»§r §e/g sethome\n§l§c»§r §e/g unsethome\n§l§c»§r §e/g home";
-    CONST HELP_MESSAGE_SIX = "Special OP Commands\n/guilds forcedelete <guilds>\n/g addgp\n/g forceunclaim <guilds>\n/g addmoney";
+    CONST HELP_MESSAGE_ONE = "§dGuilds Help Page §f[§c1§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/guilds about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/guilds accept §l§b»§r §aAccept A Guilds Request!\n§l§c»§r §e/guilds create <name> §l§b»§r §aCreate Your Desire Guilds!\n§l§c»§r §e/guilds del §l§b»§r §aDelete Your Own Guilds!\n§l§c»§r §e/guilds demote <player> §l§b»§r §aDemote Your Any SecondInCommands To Members!\n§l§c»§r §e/guilds deny §l§b»§r §aDeny A Guilds Request!";
+    CONST HELP_MESSAGE_TWO = "§dGuilds Help Page §f[§c2§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <guild> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A guildsmasters!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds guildsmasters <player> §l§b»§r §aMake A Player To Be The New guildsmasters!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!";
+    CONST HELP_MESSAGE_THREE = "§dGuilds Help Page §f[§c3§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/guilds m - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds sic - {SecondInCommands + Statuses} §l§b»§r §aShows Your SecondInCommandsList!\n§l§c»§r §e/guilds ourgm - {guildsmasters + Status} §l§b»§r §aShows Your guildmasterList!\n§l§c»§r §e/guilds alliance §l§b»§r §aShows The Guild YOU ALLIED!\n§l§c»§r §e/guilds claim\n§l§c»§r §e/guilds unclaim\n§l§c»§r §e/guilds pos\n§l§c»§r §e/guilds overclaim\n/guilds say <message>";
+    CONST HELP_MESSAGE_FOUR = "§dGuilds Help Page §f[§c4§f/§f§c6§f]" . Z::RED . "\n§l§c»§r §e/guilds desc §l§b»§r §aUpdate The Guilds Description!\n§l§c»§r §e/guilds promote <player> §l§b»§r §aPromote A Members To SecondInCommands!\n§l§c»§r §e/guilds Alliancewith <guilds> §l§b»§r §aRequest An Alliance With A Guilds!\n§l§c»§r §e/guilds breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/guilds Allianceok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/guilds Allianceno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/guilds alliance <guilds> §l§b»§r §aShows A Specific Guilds Alliance!";
+    CONST HELP_MESSAGE_FIVE = "§dGuilds Help Page §f[§c5§f/§f§c5§f]" . Z::RED . "\n§l§c»§r §e/guilds mof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/guilds sicof <guilds> §l§b»§r §aShows The List Of A Specific Guilds SecondInCommands!\n§l§c»§r §e/guilds gmof <guilds> §l§b»§r §aShows The Guilds guildmaster List!\n§l§c»§r §e/guilds search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/guilds learderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/guilds setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/guilds efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/guilds getef §l§b»§r §aGets The Effects You Have Setted!\n§l§c»§r §e/guilds sethome\n§l§c»§r §e/guilds unsethome\n§l§c»§r §e/guilds home";
+    CONST HELP_MESSAGE_SIX = "Special OP Commands\n/guilds forcedelete <guilds>\n/guilds addgp\n/guilds forceunclaim <guilds>\n/guilds addmoney";
     CONST ERROR_MESSAGE = Z::RED . "ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!ERROR!error!";
     CONST GUILDS_COMMAND = 'guilds';
     CONST G_COMMAND = 'g';
@@ -49,6 +49,89 @@ class GuildsCommands {
 	CONST MAP_OVERFLOW_MESSAGE = self::MAP_KEY_OVERFLOW . ": Too Many Guilds (>" . 107 . ") on this Map.";
 
 /////??MAP??/////
+	public function getMap(Player $observer, int $width, int $height, int $inDegrees, int $size = 16) { // No compass
+		$to = (int)sqrt($size);
+		$centerPs = new Vector3($observer->x >> $to, 0, $observer->z >> $to);
+
+		$map = [];
+
+		$centerGuild = $this->plugin->guildFromPoint($observer->getFloorX(), $observer->getFloorZ());
+		$centerGuild = $centerGuild ? $centerGuild : "Wilderness";
+
+		$head = Z::GOLD . Z::BOLD . "Guilds Map" . Z::RESET;
+		$head = Z::GRAY . str_repeat("-", (($width - strlen($head)) / 2)) . " " . $head . Z::GRAY . " " . str_repeat("-", (($width - strlen($head)) / 2));
+
+		$map[] = $head;
+
+		$halfWidth = $width / 2;
+		$halfHeight = $height / 2;
+		$width = $halfWidth * 2 + 1;
+		$height = $halfHeight * 2 + 1;
+
+		$topLeftPs = new Vector3($centerPs->x + -$halfWidth, 0, $centerPs->z + -$halfHeight);
+
+		// Get the compass
+		//$asciiCompass = ASCIICompass::getASCIICompass($inDegrees, Z::RED, Z::GOLD);
+
+		// Make room for the list of names
+		$height--;
+
+		/** @var string[] $fList */
+		$fList = array();
+		$chrIdx = 0;
+		$overflown = false;
+		$chars = self::MAP_KEY_CHARS;
+
+		// For each row
+		for ($dz = 0; $dz < $height; $dz++) {
+			// Draw and add that row
+			$row = "";
+			for ($dx = 0; $dx < $width; $dx++) {
+				if ($dx == $halfWidth && $dz == $halfHeight) {
+					$row .= (self::MAP_KEY_SEPARATOR);
+					continue;
+				}
+
+				if (!$overflown && $chrIdx >= strlen(self::MAP_KEY_CHARS)) $overflown = true;
+				$herePs = $topLeftPs->add($dx, 0, $dz);
+				$hereguild = $this->plugin->guildFromPoint($herePs->x << $to, $herePs->z << $to);
+				$contains = in_array($hereguild, $fList, true);
+				if ($hereguild === NULL) {
+					$row .= self::MAP_KEY_WILDERNESS;
+				} elseif (!$contains && $overflown) {
+					$row .= self::MAP_KEY_OVERFLOW;
+				} else {
+					if (!$contains) $fList[$chars{$chrIdx++}] = $hereguild;
+					$fchar = array_search($hereguild, $fList);
+					$row .= $this->getColorForTo($observer, $hereguild) . $fchar;
+				}
+			}
+
+			$line = $row; // ... ---------------
+
+			// Add the compass
+			//if ($dz == 0) $line = $asciiCompass[0] . "" . substr($row, 3 * strlen(self::MAP_KEY_SEPARATOR);
+			//if ($dz == 1) $line = $asciiCompass[1] . "" . substr($row, 3 * strlen(self::MAP_KEY_SEPARATOR);
+			//if ($dz == 2) $line = $asciiCompass[2] . "" . substr($row, 3 * strlen(self::MAP_KEY_SEPARATOR);
+
+			$map[] = $line;
+		}
+		$fRow = "";
+		foreach ($fList as $char => $guild) {
+			$fRow .= $this->getColorForTo($observer, $guild) . $char . ": " . $guild . " ";
+		}
+		if ($overflown) $fRow .= self::MAP_OVERFLOW_MESSAGE;
+		$fRow = trim($fRow);
+		$map[] = $fRow;
+
+		return $map;
+	}
+	public function getColorForTo(Player $player, $guild) {
+		if($this->plugin->getPlayerGuild($player->getName()) === $guild) {
+			return Z::GREEN;
+		}
+		return Z::RED;
+	}
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if ($sender instanceof Player) {
@@ -135,8 +218,8 @@ class GuildsCommands {
                             $this->plugin->updateNemisys($guildName);
                             $this->plugin->setGuildsPoints($guildName, $this->plugin->settings->get("TheDefaultPointEveryGuildStartsWith"));
                             $this->plugin->updateTag($player);
-                            $sender->sendMessage($this->plugin->formatMessage("Guild succesfull created ! use '/g desc' now.", true));
-							$sender->sendMessage($this->plugin->formatMessage("Guild successfully created for §6$create" , true));
+                            $sender->sendMessage($this->plugin->formatMessage("Guilds succesfull created ! use '/guilds desc' now.", true));
+							$sender->sendMessage($this->plugin->formatMessage("Guilds successfully created for §6$create" , true));
                             return true;
                         } else {
 						
@@ -160,7 +243,7 @@ class GuildsCommands {
                     if (strtolower($args[0]) == 'info') {
                         if (isset($args[1])) {
                             if (!(ctype_alnum($args[1])) | !($this->plugin->guildsExists($args[1]))) {
-                                $sender->sendMessage("Guild does not exist");
+                                $sender->sendMessage("Guilds does not exist");
                                 $sender->sendMessage("Make sure the name of the selected guild is ABSOLUTELY EXACT.");
                                 return true;
                             }
@@ -212,6 +295,14 @@ class GuildsCommands {
                     return true;
                         }
                     }
+                    /////??MAP??/////
+				if(strtolower($args[0] == "map")) {
+						$map = $this->getMap($sender, self::MAP_WIDTH, self::MAP_HEIGHT, $sender->getYaw(), $this->plugin->settings->get("PlotSize"));
+						foreach($map as $line) {
+							$sender->sendMessage($line);
+						}
+						return true;
+					}
 
                     ///////////////////////////////// WAR /////////////////////////////////
 
